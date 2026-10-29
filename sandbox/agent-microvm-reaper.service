@@ -1,0 +1,6 @@
+[Unit]
+Description=Reap abandoned agent Firecracker sessions
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/agent-microvm/reap_sessions.py

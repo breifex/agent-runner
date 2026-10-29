@@ -1,0 +1,24 @@
+[Unit]
+Description=Agent Firecracker guest vsock executor
+After=local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/libexec/agent-guest-agent.py
+Restart=always
+RestartSec=1
+User=root
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/work
+RestrictAddressFamilies=AF_VSOCK AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=no
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

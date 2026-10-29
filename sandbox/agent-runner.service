@@ -1,0 +1,20 @@
+[Unit]
+Description=Agent microVM runner API (listens on loopback only; reached through cloudflared or a private network)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# The jailer needs root (chroot, mount namespace, chown) and then drops Firecracker to FIRECRACKER_UID. Keep this host dedicated.
+User=root
+EnvironmentFile=/etc/agent-runner.env
+WorkingDirectory=/opt/agent-microvm/app
+Environment=PYTHONPATH=/opt/agent-microvm/app PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/agent-microvm/venv/bin/uvicorn sandbox.runner_app:app --host 127.0.0.1 --port 8765 --workers 1
+Restart=always
+RestartSec=2
+LimitNOFILE=65536
+TasksMax=4096
+
+[Install]
+WantedBy=multi-user.target
